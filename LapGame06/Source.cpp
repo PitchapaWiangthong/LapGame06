@@ -14,15 +14,17 @@ void draw_bullet(int, int);
 void erase_bullet(int, int);
 void draw_enemy(int,int);
 char cursor(int, int);
+void score(int,int,int);
 
 int main()
 {
 	char ch = '.';
 	char direction = 's';
-	int x = 38, y = 20, bx[bullet_count], by[bullet_count];
+	int x = 38, y = 20, bx[bullet_count] = { 0 }, by[bullet_count] = {0};
 	bool state[bullet_count] = { 0 };
-	int i,randomx,randomy;
+	int i,randomx,randomy,n=0;
 	int PrandomX[20], PrandomY[20];
+
 
 	srand(time(NULL));
 	for (i = 0; i < 20; i++)
@@ -70,11 +72,16 @@ int main()
 					if (bx[i] == PrandomX[j] and by[i] == PrandomY[j])
 					{
 						Iscollide = TRUE;
+						randomx = rand() % 61 + 10;
+						randomy = rand() % 4 + 2;
+						draw_enemy(randomx, randomy);
+						Beep(600, 50);
+						n ++;
 					}
 				}
 
 				erase_bullet(bx[i], by[i]);
-				if (by[i] > 0  or Iscollide == TRUE)
+				if (by[i] > 0 && !Iscollide)
 				{
 					draw_bullet(bx[i], --by[i]);
 				}
@@ -82,9 +89,9 @@ int main()
 				{
 					state[i] = 0;
 				}
-
 				
 			}
+			score(90,1,n);
 		}
 		Sleep(100);
 	} while (ch != 'p');
@@ -131,7 +138,7 @@ void setcolor(int fg, int bg)
 void draw_bullet(int x, int y)
 {
 	gotoxy(x, y);
-	setcolor(4, 4);
+	setcolor(7, 7);
 	printf(" ");
 }
 void erase_bullet(int x, int y)
@@ -142,6 +149,7 @@ void erase_bullet(int x, int y)
 }
 void draw_enemy(int x,int y)
 {
+	setcolor(rand() % 5, 0);
 	gotoxy(x, y);
 	printf("*",rand());
 }
@@ -156,4 +164,10 @@ char cursor(int x, int y)
 		return '\0';
 	else
 		return buf[0];
+}
+void score(int x,int y,int n)
+{
+	setcolor(rand() % 5 + 1, 15);
+	gotoxy(x, y);
+	printf("SCORE : %d", n);
 }
